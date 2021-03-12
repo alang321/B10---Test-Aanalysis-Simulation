@@ -14,7 +14,7 @@ while true
         snapshotList{end+1} = importSnapshot(filename, [start, i - 1]);
         break
     elseif startsWith(line, prevline)
-        start = i + 1
+        start = i + 1;
     elseif startsWith(line, afterline) && start ~= -1
         snapshotList{end+1} = importSnapshot(filename, [start, i - 1]);
     end
