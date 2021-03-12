@@ -1,4 +1,4 @@
-function plotPerColumnSnapshot(perColumnSnapshotList, delay)
+function plotGroupedSnapshot(perColumnSnapshotList, delay)
     
 for i = 1:length(perColumnSnapshotList)
     for j = 1:length(perColumnSnapshotList{i})

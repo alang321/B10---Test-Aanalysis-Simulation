@@ -1,4 +1,4 @@
-function snapshotListPerColumn = snapshotPerColumn(snapshotList, numClusters)
+function snapshotListPerColumn = groupSnapshotPerColumn(snapshotList, numClusters)
 snapshotListPerColumn = {};
 
 for i = 1:length(snapshotList)
