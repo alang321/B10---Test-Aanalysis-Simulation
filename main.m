@@ -1,10 +1,13 @@
-<<<<<<< HEAD
 
 %la vision porobe has 756 hz
 
-snapshotList = importSnapshotList("Case0.dat", "DATAPACKING", "ZONE");
+%snapshotList = importSnapshotList("Case0.dat", "DATAPACKING", "ZONE");
 %snapshotList1 = importSnapshotList("Case1.dat", "DATAPACKING", "ZONE");
 %snapshotList2 = importSnapshotList("Case2.dat", "DATAPACKING", "ZONE");
+
+load('snapshotList.mat')
+load('snapshotList1.mat')
+load('snapshotList2.mat')
 %% 
 
 plotSnapshotList(snapshotList, 1/756)
@@ -13,9 +16,8 @@ plotSnapshotList(snapshotList, 1/756)
 
 %% Put anything you want to run multiple times here without having to run the snapshot all over again
 
-NACApolymodel(snapshotList)
+NACApolymodel(snapshotList1)
 %% 
-=======
 snapshotList = importSnapshotList("Case0.dat", "DATAPACKING", "ZONE");
 %snapshotList1 = importSnapshotList("Case1.dat", "DATAPACKING", "ZONE");
 %snapshotList2 = importSnapshotList("Case2.dat", "DATAPACKING", "ZONE");
@@ -31,4 +33,3 @@ snapshotListPerCol = groupSnapshotPerColumn(snapshotList, 8);
 
 plotGroupedSnapshot(snapshotListPerRow, 1/100)
 plotGroupedSnapshot(snapshotListPerCol, 1/100)
->>>>>>> 61eafacc278bcc6d2ef2e08b71469357c162c887
