@@ -8,7 +8,10 @@ for i=row
     x=[x,list{1}.xmm(i)];
     y=[y,list{1}.ymm(i)];
 end
-a = (y(7)-y(5))/(x(7)-x(5));
+
+x=sort(x);
+y=sort(y);
+a = (y(5)-y(2))/(x(5)-x(2));
 b = y(5)-a*x(5);
 a,b
    function [p_x]=s(x_0,a,b)
@@ -18,9 +21,7 @@ a,b
        end
    end
 
-
-x_0 = x(5):0.1:x(7);
-
+x_0 = x(2):0.1:x(5);
 hold on
 plot (x_0,s(x_0,a,b))
 ylim([400,700])
