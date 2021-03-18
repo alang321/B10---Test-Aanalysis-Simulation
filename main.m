@@ -15,8 +15,8 @@ plotSnapshotList(snapshotList, 1/756)
 
 
 %% Put anything you want to run multiple times here without having to run the snapshot all over again
-
-NACApolymodel(snapshotList1)
+% expect long run-times for snapshotList 1 and 2
+NACApolymodel(snapshotList)
 %% 
 snapshotList = importSnapshotList("Case0.dat", "DATAPACKING", "ZONE");
 %snapshotList1 = importSnapshotList("Case1.dat", "DATAPACKING", "ZONE");

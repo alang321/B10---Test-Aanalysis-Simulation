@@ -1,5 +1,5 @@
 function NACApolymodel(snapshotList)
-
+close all
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % INITIALISATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -55,9 +55,16 @@ y_jlst = zeros(length(snapshotList), col);
 y_tru_jlst = zeros(length(snapshotList), col);
 %TODO: Implement the j lists to add over entire snapshot list.
 
+fprintf(1,'Expect Two Processes:\n\n');
+
+fprintf(1,'Computation Progress: %3d%%\n',0);
 for k = 1:length(snapshotList)
     % iteration number (use semicolon to prevent printing)
     k;
+    % progress
+    %disp("Computations " + round(k/length(snapshotList), 2) * 100 + " %")
+    
+    fprintf(1,'\b\b\b\b%3.0f%%',round(k/length(snapshotList), 3) * 100); % Deleting 4 characters (The three digits and the % symbol)
     
     % obtaining xmax from each snapshot and appending to list:
     x_max = max(snapshotList{k}.xmm); % mm
@@ -118,13 +125,17 @@ for k = 1:length(snapshotList)
     end
     % TODO: PLOT ALL X Y DATA ON ONE XYPLANE
 end
+fprintf('\n\n'); % To go to a new line after reaching 100% progress
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PLOTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% clears previous figure when run
-clf
+% progress status
+fprintf(1,'Plot Progress: %3d%%\n',0);
+for h = 1:1:8
+    fprintf(1,'\b\b\b\b%3.0f%%',round(0/8, 3) * 100); % Deleting 4 characters (The three digits and the % symbol)
+end
 
 % X, Y pos. data for X max over all Snapshots
 subplot(2,2,[1 3])
@@ -150,6 +161,12 @@ hold off
 % TODO: MODE OR MEDIAN??
 % TODO: plot of variation of XMAX over the snapshots (time)
 
+
+% progress status
+for h = 1:1:8
+    fprintf(1,'\b\b\b\b%3.0f%%',round(1/8, 3) * 100); % Deleting 4 characters (The three digits and the % symbol)
+end
+
 %Snapshot vs. Observed X Data Closest to the Origin
 subplot(2,2,2)
 % initialise the vector space
@@ -169,8 +186,13 @@ ylabel("Maximum X [mm]")
 %axis equal
 %set(gca,'XLim',[0 100],'YLim',[TE-280 TE])
 % TODO: plot without data above the average
-
 annotation('textbox',[0.3 0.0 0.2 0.3],'String','Note: Chordline pos. not correlated to Y coord. of XMAX; represents TE','EdgeColor','none')
+
+
+% progress status
+for h = 1:1:8
+    fprintf(1,'\b\b\b\b%3.0f%%',round(3/8, 3) * 100); % Deleting 4 characters (The three digits and the % symbol)
+end
 
 % Snapshot vs. Y Position of Airfoil Chordline (time)
 subplot(2,2,4)
@@ -189,9 +211,14 @@ ylabel("Y Position of Chordline [mm]")
 %axis equal
 % TODO: plot without values below the average.
 
-%% 
-% clears previous figure when run
-clf
+%%
+% initialize new figure
+figure
+
+% progress status
+for h = 1:1:8
+    fprintf(1,'\b\b\b\b%3.0f%%',round(4/8, 3) * 100); % Deleting 4 characters (The three digits and the % symbol)
+end
 
 % X, Y pos. data at Snapshot num in the Robot PIV csys.
 subplot(1,2,1)
@@ -207,6 +234,11 @@ ylabel("Y [mm]")
 axis equal
 set(gca,'XLim',[TE-280 TE],'YLim',[500 700])
 
+
+% progress status
+for h = 1:1:8
+    fprintf(1,'\b\b\b\b%3.0f%%',round(5/8, 3) * 100); % Deleting 4 characters (The three digits and the % symbol)
+end
 
 % k-median clustering plot in PIV csys.
 subplot(1,2,2)
@@ -239,8 +271,13 @@ set(gca,'XLim',[TE-280 TE],'YLim',[500 700])
 
 %%  
 
-% clears previous figure when run
-clf
+% initialize new figure
+figure
+
+% progress status
+for h = 1:1:8
+    fprintf(1,'\b\b\b\b%3.0f%%',round(6/8, 3) * 100); % Deleting 4 characters (The three digits and the % symbol)
+end
 
 % x and y plot for snapshot in airfoil csys.
 %subplot(1,2,2)
@@ -271,14 +308,18 @@ hold off
 
 %%
 
-% clears previous figure when run
-clf
+% initialie new figure
+figure
+
 
 
 for num = 1:length(snapshotList)
     % k-median clustering plot in PIV csys.
+   
+    % progress status
+    fprintf(1,'\b\b\b\b%3.0f%%',round( num/length(snapshotList) * ( 1 - round(7/8, 3) ) + round(7/8, 3), 3)  * 100); % Deleting 4 characters (The three digits and the % symbol)
+
     hold on
-    
     subplot(1,2,1)
     % putting vector x and y observation data into matrix
     %matrix_xy = [transpose(x_jlst(num,:)),transpose(y_jlst(num,:))];
@@ -335,5 +376,7 @@ for num = 1:length(snapshotList)
     
     hold off
 end
+
+fprintf('\n'); % To go to a new line after reaching 100% progres
 
 
