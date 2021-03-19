@@ -16,7 +16,7 @@ else
     y=sort(y);
     a = (y(m)-y(k))/(x(m)-x(k));
     % b = y(m)-a*x(m);
-    aoa=atan(a-0.1794);
+    aoa=atan(a-0.1794)*180/3.1415;
 %    function [p_x]=s(x_0,a,b)
 %        p_x = [];
 %        for j=x_0
