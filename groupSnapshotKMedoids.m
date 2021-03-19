@@ -1,4 +1,4 @@
-function [medoidList, snapshotListPerColumn] = groupSnapshotPerColumn(snapshotList, numClusters)
+function [medoidList, snapshotListPerColumn] = groupSnapshotKMedoids(snapshotList, numClusters)
 snapshotListPerColumn = {};
 medoidList = {};
 

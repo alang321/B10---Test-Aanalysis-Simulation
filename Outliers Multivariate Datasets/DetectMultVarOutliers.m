@@ -1,4 +1,4 @@
-function [mu,S,RD,chi_crt]=DetectMultVarOutliers(X,n_out,id_in,vis)
+function [mu,S,RD,chi_crt] = DetectMultVarOutliers(X,n_out,id_in,vis)
 % Detect outliers contained in a normally distributed multivariate dataset
 % using procedure described in [1].
 %
