@@ -1,9 +1,11 @@
 function NACApolymodel(snapshotList)
-
+close all
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % INITIALISATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+% INPUT SNAPSHOT NUMBER
+num = 28; % between 1 and 100 for Case 0
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % AIRFOIL DATA
 chord = 0.4*1000; %mm
 rot_axis = 0.3125; % x/c from LE; rotational axis of the model
@@ -37,8 +39,15 @@ y_chordlst = zeros(1, length(snapshotList));
 
 % initialise vectors per snapshot (overwrites previous
 % snapshot)
+col = 1;
+
 for h = 1:length(snapshotList)
-    col = max(length(snapshotList{h}.xmm));
+    col_new = max(length(snapshotList{h}.xmm));
+    if col_new > col
+        col = col_new;
+    else
+        col = col;
+    end
 end
 
 x_jlst = zeros(length(snapshotList), col);
@@ -46,9 +55,16 @@ y_jlst = zeros(length(snapshotList), col);
 y_tru_jlst = zeros(length(snapshotList), col);
 %TODO: Implement the j lists to add over entire snapshot list.
 
+fprintf(1,'Expect Two Processes:\n\n');
+
+fprintf(1,'Computation Progress: %3d%%\n',0);
 for k = 1:length(snapshotList)
     % iteration number (use semicolon to prevent printing)
     k;
+    % progress
+    %disp("Computations " + round(k/length(snapshotList), 2) * 100 + " %")
+    
+    fprintf(1,'\b\b\b\b%3.0f%%',round(k/length(snapshotList), 3) * 100); % Deleting 4 characters (The three digits and the % symbol)
     
     % obtaining xmax from each snapshot and appending to list:
     x_max = max(snapshotList{k}.xmm); % mm
@@ -78,18 +94,24 @@ for k = 1:length(snapshotList)
     y_chordlst(k) = y_chord;
     
     % initialise vectors per snapshot (overwrites previous
-    % snapshot)
-    x_jlst = zeros(1, length(snapshotList{k}.xmm));
-    y_jlst = zeros(1, length(snapshotList{k}.xmm));
-    y_tru_jlst = zeros(1, length(snapshotList{k}.xmm));
+    % snapshot) OUTDATED%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %x_jlst = zeros(1, length(snapshotList{k}.xmm));
+    %y_jlst = zeros(1, length(snapshotList{k}.xmm));
+    %y_tru_jlst = zeros(1, length(snapshotList{k}.xmm));
     
     % loops over all x values in the current snapshot k
-    for j = 1:length(snapshotList{k}.xmm)
-        % OBSERVED x and y from data snapshot list to vectors
-        x_j = snapshotList{k}.xmm(j); % mm
-        x_jlst(j) = x_j;
-        y_j = snapshotList{k}.ymm(j); % mm
-        y_jlst(j) = y_j;
+    for j = 1:col
+        if length(snapshotList{k}.xmm) >= j
+            % OBSERVED x and y from data snapshot list to vectors
+            x_j = snapshotList{k}.xmm(j); % mm
+            x_jlst(k, j) = x_j;
+            y_j = snapshotList{k}.ymm(j); % mm
+            y_jlst(k, j) = y_j;
+        elseif length(snapshotList{k}.xmm) < j
+            % Empty to vectors when matrice row length too long
+            x_jlst(k, j) = inf;
+            y_jlst(k, j) = inf;
+        end
         
         % OBSERVED x coordinate values as percentage of the chord
         % provides x as a percentage of the chord; LE x-coord - x coord.
@@ -99,17 +121,21 @@ for k = 1:length(snapshotList)
         % TRUE y using OBSERVED x and AIRFOIL POLYNOMIAL using y_chord as
         % the basis of the polynomial (adjusted in y).
         y_tru_j = y_chordlst(k) - (y(PER_x_j) * chord); % mm
-        y_tru_jlst(j) = y_tru_j;
+        y_tru_jlst(k, j) = y_tru_j;
     end
     % TODO: PLOT ALL X Y DATA ON ONE XYPLANE
 end
+fprintf('\n\n'); % To go to a new line after reaching 100% progress
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PLOTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% clears previous figure when run
-clf
+% progress status
+fprintf(1,'Plot Progress: %3d%%\n',0);
+for h = 1:1:8
+    fprintf(1,'\b\b\b\b%3.0f%%',round(0/8, 3) * 100); % Deleting 4 characters (The three digits and the % symbol)
+end
 
 % X, Y pos. data for X max over all Snapshots
 subplot(2,2,[1 3])
@@ -135,6 +161,12 @@ hold off
 % TODO: MODE OR MEDIAN??
 % TODO: plot of variation of XMAX over the snapshots (time)
 
+
+% progress status
+for h = 1:1:8
+    fprintf(1,'\b\b\b\b%3.0f%%',round(1/8, 3) * 100); % Deleting 4 characters (The three digits and the % symbol)
+end
+
 %Snapshot vs. Observed X Data Closest to the Origin
 subplot(2,2,2)
 % initialise the vector space
@@ -154,8 +186,13 @@ ylabel("Maximum X [mm]")
 %axis equal
 %set(gca,'XLim',[0 100],'YLim',[TE-280 TE])
 % TODO: plot without data above the average
-
 annotation('textbox',[0.3 0.0 0.2 0.3],'String','Note: Chordline pos. not correlated to Y coord. of XMAX; represents TE','EdgeColor','none')
+
+
+% progress status
+for h = 1:1:8
+    fprintf(1,'\b\b\b\b%3.0f%%',round(3/8, 3) * 100); % Deleting 4 characters (The three digits and the % symbol)
+end
 
 % Snapshot vs. Y Position of Airfoil Chordline (time)
 subplot(2,2,4)
@@ -174,18 +211,23 @@ ylabel("Y Position of Chordline [mm]")
 %axis equal
 % TODO: plot without values below the average.
 
-%% 
-% clears previous figure when run
-clf
+%%
+% initialize new figure
+figure
 
-% X, Y pos. data at Snapshot 100 in the Robot PIV csys.
+% progress status
+for h = 1:1:8
+    fprintf(1,'\b\b\b\b%3.0f%%',round(4/8, 3) * 100); % Deleting 4 characters (The three digits and the % symbol)
+end
+
+% X, Y pos. data at Snapshot num in the Robot PIV csys.
 subplot(1,2,1)
-plot(x_jlst, y_jlst, 'ro', x_jlst, y_tru_jlst, 'bx')
+plot(x_jlst(num,:), y_jlst(num,:), 'ro', x_jlst(num,:), y_tru_jlst(num,:), 'bx')
 hold on
-x_TEfromOrigin = x_maxlst(100) + 15; % mm
-y_TEfromOrigin = y_chordlst(100); % mm
+x_TEfromOrigin = x_maxlst(num) + 15; % mm
+y_TEfromOrigin = y_chordlst(num); % mm
 plot(x * chord -(chord - x_TEfromOrigin), - y(x)*chord + y_TEfromOrigin, 'b--',x * chord -(chord - x_TEfromOrigin), y(x)*chord + y_TEfromOrigin, 'b--')
-title("X, Y pos. data at Snapshot 100 in the Robot PIV csys.")
+title("X, Y pos. data at Snapshot " + num + " in the Robot PIV csys.")
 legend("Observed", "True")
 xlabel("X [mm]")
 ylabel("Y [mm]")
@@ -193,10 +235,16 @@ axis equal
 set(gca,'XLim',[TE-280 TE],'YLim',[500 700])
 
 
+% progress status
+for h = 1:1:8
+    fprintf(1,'\b\b\b\b%3.0f%%',round(5/8, 3) * 100); % Deleting 4 characters (The three digits and the % symbol)
+end
+
 % k-median clustering plot in PIV csys.
 subplot(1,2,2)
 % putting vector x and y observation data into matrix
-matrix_xy = [transpose(x_jlst),transpose(y_jlst)];
+%matrix_xy = [transpose(x_jlst(num,:)),transpose(y_jlst(num,:))];
+matrix_xy = [snapshotList{num}.xmm,snapshotList{num}.ymm];
 % using k-median clustering algorithm to determine the centroids of 8
 % cluster groups representing the 8 markers in the x-y plane
 [idx, C] = kmedoids(matrix_xy, 8);
@@ -214,7 +262,7 @@ plot(matrix_xy(idx==8, 1), matrix_xy(idx==8, 2), 'blacko')
 plot(C(:,1), C(:,2), 'kx','MarkerSize',12)
 plot(x * chord -(chord - x_TEfromOrigin), - y(x)*chord + y_TEfromOrigin, 'b--',x * chord -(chord - x_TEfromOrigin), y(x)*chord + y_TEfromOrigin, 'b--')
 hold off
-title("X, Y pos. data at Snapshot 100")
+title("X, Y pos. data at Snapshot " + num)
 legend("Cluster 1", "Cluster 2","Cluster 3", "Cluster 4","Cluster 5", "Cluster 6","Cluster 7", "Cluster 8", "Cluster Centroids", 'Location','Southoutside')
 xlabel("X [mm]")
 ylabel("Y [mm]")
@@ -223,8 +271,13 @@ set(gca,'XLim',[TE-280 TE],'YLim',[500 700])
 
 %%  
 
-% clears previous figure when run
-clf
+% initialize new figure
+figure
+
+% progress status
+for h = 1:1:8
+    fprintf(1,'\b\b\b\b%3.0f%%',round(6/8, 3) * 100); % Deleting 4 characters (The three digits and the % symbol)
+end
 
 % x and y plot for snapshot in airfoil csys.
 %subplot(1,2,2)
@@ -232,17 +285,18 @@ clf
 x_kTE = max(C(:,1)) + 15; % mm
 % x coord. transformation of TE to rotation axis csys.
 x_krot = x_kTE - (400 - rot_axis * chord);  % mm
-x_rotlst = x_jlst + abs(x_krot);
+%x_rotlst = x_jlst + abs(x_krot);
+x_rotlst = snapshotList{num}.xmm + abs(x_krot);
 % plotting
-plot(x_rotlst, y_jlst, 'ro', x_rotlst, y_tru_jlst, 'blackx', "MarkerSize",8)
+plot(x_rotlst, snapshotList{num}.ymm , 'ro', x_rotlst, y_tru_jlst(num, 1:length(snapshotList{num}.ymm)), 'blackx', "MarkerSize",8)
 hold on
 % superimposing the NACA 0018 polynomial
 x = linspace(0, 1, 1000);
 %x_TEfromOrigin = 400 - rot_axis * chord;  % mm
-x_TEfromOrigin = x_maxlst(100)+ 15 - x_krot; % mm
-y_TEfromOrigin = y_chordlst(100); % mm
+x_TEfromOrigin = x_maxlst(num)+ 15 - x_krot; % mm
+y_TEfromOrigin = y_chordlst(num); % mm
 plot(x * chord -(chord - x_TEfromOrigin), - y(x)*chord + y_TEfromOrigin, 'b--',x * chord -(chord - x_TEfromOrigin), y(x)*chord + y_TEfromOrigin, 'b--')
-title("X, Y pos. data at Snapshot 100, Origin at the Rotation Axis.")
+title("X, Y pos. data at Snapshot " + num + " Origin at the Rotation Axis.")
 legend("Observed", "True", "NACA0018 Polynomial")
 xlabel("X [mm]")
 ylabel("Y [mm]")
@@ -251,5 +305,78 @@ set(gca,'XLim',[0 280],'YLim',[500 700])
 hold off
 
 % TODO: Add simplified graph with cluster centroids
+
+%%
+
+% initialie new figure
+figure
+
+
+
+for num = 1:length(snapshotList)
+    % k-median clustering plot in PIV csys.
+   
+    % progress status
+    fprintf(1,'\b\b\b\b%3.0f%%',round( num/length(snapshotList) * ( 1 - round(7/8, 3) ) + round(7/8, 3), 3)  * 100); % Deleting 4 characters (The three digits and the % symbol)
+
+    hold on
+    subplot(1,2,1)
+    % putting vector x and y observation data into matrix
+    %matrix_xy = [transpose(x_jlst(num,:)),transpose(y_jlst(num,:))];
+    matrix_xy = [snapshotList{num}.xmm,snapshotList{num}.ymm];
+    % using k-median clustering algorithm to determine the centroids of 8
+    % cluster groups representing the 8 markers in the x-y plane
+    [idx, C] = kmedoids(matrix_xy, 8);
+    % plotting each of the 8 observed clusters
+    plot(matrix_xy(idx==1, 1), matrix_xy(idx==1, 2), 'o')
+    plot(matrix_xy(idx==2, 1), matrix_xy(idx==2, 2), 'o')
+    plot(matrix_xy(idx==3, 1), matrix_xy(idx==3, 2), 'o')
+    plot(matrix_xy(idx==4, 1), matrix_xy(idx==4, 2), 'o')
+    plot(matrix_xy(idx==5, 1), matrix_xy(idx==5, 2), 'o')
+    plot(matrix_xy(idx==6, 1), matrix_xy(idx==6, 2), 'o')
+    plot(matrix_xy(idx==7, 1), matrix_xy(idx==7, 2), 'o')
+    plot(matrix_xy(idx==8, 1), matrix_xy(idx==8, 2), 'o')
+    % plotting the centroids of the 8 observed clusters
+    plot(C(:,1), C(:,2), 'kx','MarkerSize',12)
+    plot(x * chord -(chord - x_TEfromOrigin), - y(x)*chord + y_TEfromOrigin, 'b--',x * chord -(chord - x_TEfromOrigin), y(x)*chord + y_TEfromOrigin, 'b--')
+    title("X, Y pos. data at Snapshot " + num)
+    %legend("Cluster 1", "Cluster 2","Cluster 3", "Cluster 4","Cluster 5", "Cluster 6","Cluster 7", "Cluster 8", "Cluster Centroids", 'Location','Southoutside')
+    xlabel("X [mm]")
+    ylabel("Y [mm]")
+    axis equal
+    set(gca,'XLim',[TE-280 TE],'YLim',[500 700])
+    
+    hold off
+    
+    hold on
+
+    % x and y plot for snapshot in airfoil csys.
+    subplot(1,2,2)
+    % x coord. of TE determed from k-median clustering in PIV csys.
+    x_kTE = max(C(:,1)) + 15; % mm
+    % x coord. transformation of TE to rotation axis csys.
+    x_krot = x_kTE - (400 - rot_axis * chord);  % mm
+    %x_rotlst = x_jlst + abs(x_krot);
+    x_rotlst = snapshotList{num}.xmm + abs(x_krot);
+    % plotting
+    %plot(x_rotlst, snapshotList{num}.ymm , 'ro', x_rotlst, y_tru_jlst(num, 1:length(snapshotList{num}.ymm)), 'blackx', "MarkerSize",8)
+    plot(x_rotlst, snapshotList{num}.ymm , 'ro')
+    % superimposing the NACA 0018 polynomial
+    x = linspace(0, 1, 1000);
+    %x_TEfromOrigin = 400 - rot_axis * chord;  % mm
+    x_TEfromOrigin = x_maxlst(num)+ 15 - x_krot; % mm
+    y_TEfromOrigin = y_chordlst(num); % mm
+    plot(x * chord -(chord - x_TEfromOrigin), - y(x)*chord + y_TEfromOrigin, 'b--',x * chord -(chord - x_TEfromOrigin), y(x)*chord + y_TEfromOrigin, 'b--')
+    title("X, Y pos. data at Snapshot " + num + " Origin at the Rotation Axis.")
+    %legend("Observed", "True", "NACA0018 Polynomial")
+    xlabel("X [mm]")
+    ylabel("Y [mm]")
+    axis equal
+    set(gca,'XLim',[0 280],'YLim',[500 700])
+    
+    hold off
+end
+
+fprintf('\n'); % To go to a new line after reaching 100% progres
 
 
