@@ -18,7 +18,9 @@ for i = 1:length(grouping1)
     axis equal
     set(gca,'XLim',[-800 -400],'YLim',[500 700])
     
-    pause(0.5)
+    title('Snapshot:', int2str(i))
+    
+    pause(0.3)
 end
 
 end
