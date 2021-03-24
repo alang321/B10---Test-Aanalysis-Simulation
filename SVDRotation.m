@@ -12,12 +12,12 @@ mbar = 1/length(m) * sum(m);
 
 dc = d - dbar;
 mc = m - mbar;
-H = mc .* trans(dc);
+H = mc .* transpose(dc);
 
 [U, ~, V] = svd(H);
 
-R = V * trans(U);
-T = dbar - R * mbar;
+R = V .* transpose(U);
+T = dbar - R .* mbar;
 
 % If the det(R) is -1 the method breaks down (should not happen in our case
 % afaik)
