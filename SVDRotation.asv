@@ -3,7 +3,7 @@ function [R, T] = SVDRotation(d, m)
 % rotation and transformation matrices, R and T, between the sets as per
 % Eggert et al. (1997)
 
-% Check the paper for the derivation of these equations
+% Check the paper for the derivation of these equations 
 dbar = 1/length(d) * sum(d);
 mbar = 1/length(m) * sum(m);
 
