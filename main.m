@@ -18,7 +18,7 @@ case0avg = [x1; y1];
 a = absor(ref, case0avg);
 hinge = a.R * [(400 * 0.75); 0] + a.t
 
-medianPerSnapshot = getSortedMedoidFromColumnClusters(snapshotListGroupedColKMed);
+medianPerSnapshot = getSortedMediansFromColumnClusters(snapshotListGroupedColKMed);
 
 %[anglesBody, xPosBody, errorsx] = getRotationFromReference2dFixedFlap(case0avg, medianPerSnapshot);
 [anglesBody, xPosBody, anglesFlap, xPosFlap, errorsx] = getRotationFromReference2dMovingFlap(case0avg, medianPerSnapshot);
