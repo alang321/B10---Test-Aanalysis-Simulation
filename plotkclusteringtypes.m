@@ -1,6 +1,9 @@
-function plotkclusteringtypes(snapshotList)
+function kmedoiddata = plotkclusteringtypes(snapshotList)
 % clears the previous figure
 clf
+
+% initialise cell array of snapshotlength of columns
+kmedoidsList = cell([1,length(snapshotList)]);
 
 % intialisation of sum of centroids, zeros in 8 by 2 matrix
 sum_of_centroids3 = zeros(8, 2);
@@ -31,6 +34,7 @@ for i = 1:length(snapshotList)
     % sorting 8 centroids in increasing x-coordinate for snapshot i
     [~,idx] = sort(C3(:,1));
     sortedcentroids3 = C3(idx,:);
+    kmedoidsList(i) = {sortedcentroids3};
     
     [~,idx] = sort(C6(:,1));
     sortedcentroids6 = C6(idx,:);
@@ -68,5 +72,5 @@ for i = 1:length(snapshotList)
     legend('raw', 'cheby' ,'euclidean', 'minkowski')
     %axis equal
 end
-
+kmedoiddata = kmedoidsList;
 end
