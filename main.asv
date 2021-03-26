@@ -4,18 +4,47 @@
 %plotCombinedSnapshotList(snapshotList1, snapshotList2, 1/756)
 
 
-snapshotListReducedOutlier = removeOutliersDBScanRow(snapshotList, 4, 4);
+%snapshotListReducedOutlier = removeOutliersDBScanRow(snapshotList1, 4, 4);
 
-[a snapshotListPerColMed] = groupSnapshotKMedoids(snapshotList, 8);
-snapshotListGroupedColDBScan = groupSnapshotDBScan(snapshotListRMOutlier, 5, 3);
-%[medoidList, snapshotListPerCol] = groupSnapshotKMedoids(snapshotList, 8);
+%[medoids snapshotListGroupedColKMed] = groupSnapshotKMedoids(snapshotList1, 8);
+%snapshotListGroupedColDBScan = groupSnapshotDBScan(snapshotListReducedOutlier, 5, 3);
 
-plotComparedGroupings(snapshotListPerColMed, snapshotListGroupedColDBScan)
+%plotComparedGroupings(snapshotListGroupedColKMed, snapshotListGroupedColDBScan)
+
+x = [385.3032800407517 350.9195695241304 316.43952717794 286.79848832784944 252.13323652288875 217.37859951713284 182.53356646347572 147.60473706377394];
+y = [-3.757070215678503 -10.288879892895812 -16.295789807523565 -20.922755972022706 -25.743226393062304 -29.859305492922243 -33.09843552219046 -35.18937883549954];
+ref = [x; y];
+
+x1 = [-719.2141 -683.2147 -648.3127 -614.3401 -579.0444 -546.6513 -512.1990 -478.0280];
+y1 = [576.6304 578.5438 582.0158 586.4820 591.2920 596.3880 602.2807 608.4452];
+case0avg = [x1; y1];
+
+medianPerSnapshot = getSortedMediansFromColumnClusters(snapshotListGroupedColDBScan);
 
 
-%plotMedoids(medoidList, snapshotListPerCol)
+angles = {};
+xPos = {};
+
+errorsx = {};
+errorsy = {};
+for i = 1:length(medianPerSnapshot)
+    try
+        a = absor(case0avg, medianPerSnapshot{i});
+        angles{end+1} = rad2deg(asin(a.R(1, 2)));
+        xPos{end+1} = i/100;
+    catch ME
+        errorsx{end+1} = i/100;
+        errorsy{end+1} = 0;
+    end
+end
+
+plot(transpose(cell2mat(xPos)), transpose(cell2mat(angles)))
+
+title('AOA of rotor blade')
+xlabel('t [sec]') 
+ylabel('aoa [deg]') 
+%hold on
+%scatter(transpose(cell2mat(errorsx)), transpose(cell2mat(errorsy)), 1)
+%hold off
 
 
-
-%plotGroupedSnapshot(snapshotListPerRow, 1/100)
-%plotGroupedSnapshot(snapshotListPerCol, 1/100)
