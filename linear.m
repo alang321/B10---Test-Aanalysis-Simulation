@@ -5,16 +5,14 @@ function [main,flap]=linear(list,n)
 row=[1,7,14,21,28,35,42,49];
 x=[];
 y=[];
-if height(list{n})<49
+if height(list{n})<8
     main=0;
     flap=0;
 else 
-    for i=row
-        x=[x,list{n}.xmm(i)];
-        y=[y,list{n}.ymm(i)];
+    for i=1:height(list{n})
+        x=[x,list{n}(i,1)];
+        y=[y,list{n}(i,2)];
     end
-    x=sort(x);
-    y=sort(y);
 %     x=[-719.2141,-683.2147,-648.3127,-614.3401,-579.0444,-546.6513,-512.1990,-478.0280];
 %     y=[576.6304,578.5438,582.0185,586.4820,591.2920,596.3880,602.2807,608.4452];
     a1 = (y(8)-y(6))/(x(8)-x(6));

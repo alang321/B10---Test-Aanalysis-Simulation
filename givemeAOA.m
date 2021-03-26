@@ -16,7 +16,8 @@ end
 hold on
 plot(t,aoa_flap);
 plot(t,aoa_main);
+plot(t,aoa_flap-aoa_main)
 hold off
-legend('aoa flap','aoa main')
+legend('aoa flap','aoa main','relative')
 end
 
