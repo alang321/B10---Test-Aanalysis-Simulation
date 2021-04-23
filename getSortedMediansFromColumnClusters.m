@@ -9,8 +9,10 @@ for i = 1:length(snapshotListCol)
         medianArray(j, 1) = mean(snapshotListCol{i}{j}.xmm);
         medianArray(j, 2) = mean(snapshotListCol{i}{j}.ymm);
     end
+    
+    A = transpose(sortrows(medianArray,1, 'ascend'));
         
-    medianList{end  + 1} = transpose(sortrows(medianArray,1, 'ascend'));
+    medianList{end  + 1} = A;
 end
 
 end
