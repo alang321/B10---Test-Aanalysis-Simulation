@@ -1,4 +1,4 @@
-function medoidList = getSortedMedoidFromColumnClusters(snapshotListCol)
+function medoidList = getSortedMedoidsFromColumnClusters(snapshotListCol)
 
 medoidList = {};
 
