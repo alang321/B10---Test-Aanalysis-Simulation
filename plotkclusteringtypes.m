@@ -68,19 +68,19 @@ avg_of_centroids3 = sum_of_centroids3/length(snapshotList);
 avg_of_centroids6 = sum_of_centroids6/length(snapshotList);
 avg_of_centroids8 = sum_of_centroids8/length(snapshotList);
 
-% plot of average centroids with raw data over all snapshot
-%for i = 1:length(snapshotList)
-%    hold on
-%    
-%    % puts data in matrix for k-median clustering algorithm
-%    matrix = [snapshotList{i}.xmm,snapshotList{i}.ymm];
-%    
-%    % plotting of the 3 centroid distance methods averaged with raw data
-%    % over all snapshots
-%    plot(matrix(:,1), matrix(:,2), 'ko', avg_of_centroids3(:,1), avg_of_centroids3(:,2), 'r+', avg_of_centroids6(:,1), avg_of_centroids6(:,2), 'bx', avg_of_centroids8(:,1), avg_of_centroids8(:,2), 'g+', 'MarkerSize', 10)
-%    legend('raw', 'cheby' ,'euclidean', 'minkowski')
-%    %axis equal
-%end
+%plot of average centroids with raw data over all snapshot
+for i = 1:length(snapshotList)
+    hold on
+    
+    % puts data in matrix for k-median clustering algorithm
+    matrix = [snapshotList{i}.xmm,snapshotList{i}.ymm];
+    
+    % plotting of the 3 centroid distance methods averaged with raw data
+    % over all snapshots
+    plot(matrix(:,1), matrix(:,2), 'ko', avg_of_centroids3(:,1), avg_of_centroids3(:,2), 'r+', avg_of_centroids6(:,1), avg_of_centroids6(:,2), 'bx', avg_of_centroids8(:,1), avg_of_centroids8(:,2), 'g+', 'MarkerSize', 10)
+    legend('raw', 'cheby' ,'euclidean', 'minkowski')
+    %axis equal
+end
 
 kmedoiddata = kmedoidsList;
 end
