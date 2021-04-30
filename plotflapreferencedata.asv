@@ -1,0 +1,21 @@
+function plotflapreferencedata(X,Y)
+[p, S] = polyfit(k, x_maxlst, 1);
+
+[x_maxlst_fit,delta] = polyval(p, k, S);
+plot(k, x_maxlst_fit, 'b-')
+plot(k, x_maxlst_fit + 2 * delta, 'r--', k, x_maxlst_fit - 2 * delta, 'r--')
+
+plot(X, Y, 'b-')
+title('Reference Data Plot; Normalized Time Period Variation of Flap Deflection Angle')
+xlabel('Normalized Time Period [-]')
+ylabel('Flap Deflection Angle [deg]')
+
+% formulation of linear fit
+
+
+% pretty stuff
+title("Snapshot vs. Observed X MAX Data")
+legend("Observed Data", "Linear Fit", "95% Prediction Interval")
+xlabel("Snapshot [-]")
+ylabel("Maximum X [mm]")
+end
